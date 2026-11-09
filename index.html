@@ -47,6 +47,43 @@ dialog{width:min(700px,92%);border:1px solid var(--line);border-radius:18px;back
 <input class="search" id="search" type="search" placeholder="ابحث في العناوين والكلمات…" aria-label="ابحث في الكتابات">
 <div class="grid" id="cards"></div>
 </div></section>
+ <!-- قسم عرض المقالات من بلوجر -->
+<div style="max-width: 800px; margin: 40px auto; padding: 20px; background-color: #fcfcfc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: right; direction: rtl;">
+    <h2 style="color: #8b5a2b; border-bottom: 2px solid #8b5a2b; padding-bottom: 10px; margin-bottom: 20px;">بوح القلم - أحدث كتاباتي</h2>
+    <div id="blogger-posts-container" style="min-height: 100px;">جاري تحميل الكتابات...</div>
+</div>
+
+<script>
+    const blogUrl = "https://bouh-alqalam-bechir.blogspot.com";
+    const feedUrl = blogUrl + "/feeds/posts/default?alt=json";
+
+    fetch(feedUrl)
+        .then(response => response.json())
+        .then(data => {
+            const posts = data.feed.entry;
+            let html = "";
+            if (posts) {
+                posts.forEach(post => {
+                    const title = post.title.$t;
+                    const content = post.content ? post.content.$t : "";
+                    
+                    html += `
+                        <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px dashed #ccc;">
+                            <h3 style="color: #333; margin-bottom: 15px; font-size: 22px;">${title}</h3>
+                            <div style="color: #555; line-height: 1.8; font-size: 16px; overflow-wrap: break-word;">${content}</div>
+                        </div>
+                    `;
+                });
+                document.getElementById("blogger-posts-container").innerHTML = html;
+            } else {
+                document.getElementById("blogger-posts-container").innerHTML = "<p>لا توجد كتابات بعد، في انتظار إبداعك!</p>";
+            }
+        })
+        .catch(error => {
+            document.getElementById("blogger-posts-container").innerHTML = "<p>عذراً، حدث خطأ في تحميل الكتابات.</p>";
+        });
+</script>
+
 <section id="about"><div class="wrap about">
 <div><div class="kicker">عن صاحب الكلمات</div><h2 style="font:700 2.2rem 'Amiri',serif">أنا والكتابة… حكاية بوح</h2>
 <p>هذا المكان نافذتي الصغيرة إلى المعنى. أكتب ما يمرّ بالقلب من مشاعر، وما تفتحه الحياة من أسئلة، وما تمنحه الروح من رجاء. أهلًا بكل قارئ وجد هنا كلمة تشبهه.</p>
