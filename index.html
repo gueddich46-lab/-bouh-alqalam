@@ -41,7 +41,7 @@ function setAudio(){
  let url='';
  audioFallbackUsed=false;alafasyBackupUrl='';
  if(isAlafasy(r)){
-  alafasyBackupUrl=r.surahs.has(n)?r.server.replace(/\\/+$/,'')+'/'+String(n).padStart(3,'0')+'.mp3':'';
+  alafasyBackupUrl=r.surahs.has(n)?(r.server.endsWith('/')?r.server:r.server+'/')+String(n).padStart(3,'0')+'.mp3':'';
   url=alafasyPrimary(n);
  }else if(r){
   if(!r.surahs.has(n)){
@@ -49,7 +49,7 @@ function setAudio(){
    $('downloadAudio').removeAttribute('href');
    $('qstatus').textContent='هذه السورة غير متاحة لهذا القارئ في المصحف المحدد. اختر قارئًا آخر.';return;
   }
-  url=r.server.replace(/\\/+$/,'')+'/'+String(n).padStart(3,'0')+'.mp3';
+  url=(r.server.endsWith('/')?r.server:r.server+'/')+String(n).padStart(3,'0')+'.mp3';
  }else{
   url='https://cdn.islamic.network/quran/audio-surah/128/'+selected+'/'+n+'.mp3';
  }
