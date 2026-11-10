@@ -33,18 +33,23 @@ $('filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;
 $('closeReader').onclick=()=>$('reader').close();$('copyText').onclick=async()=>{if(opened)await navigator.clipboard.writeText(opened.title+'\n\n'+opened.body)};$('downloadText').onclick=()=>{if(opened)download(opened.title.replace(/[\\/:*?"<>|]/g,'-')+'.txt',opened.title+'\n\n'+opened.body+'\n\nبقلم بشير قديش')};async function share(data){if(navigator.share)try{await navigator.share(data);return}catch(e){}await navigator.clipboard.writeText(data.text||data.url||'');alert('تم النسخ للمشاركة')}$('shareText').onclick=()=>opened&&share({title:opened.title,text:opened.title+'\n\n'+opened.body+'\n\n'+location.href});$('shareSite').onclick=()=>share({title:'بوح القلم',url:location.href});$('copyLink').onclick=async()=>{await navigator.clipboard.writeText(location.href);alert('تم نسخ رابط الموقع')};
 const duas=[['دعاء الخير','رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ','البقرة: 201'],['دعاء الرحمة','رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ','الأعراف: 23'],['دعاء العلم','رَبِّ زِدْنِي عِلْمًا','طه: 114'],['دعاء شرح الصدر','رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي','طه: 25–26'],['دعاء الذرية','رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ','الصافات: 100'],['دعاء المغفرة','رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ','الحشر: 10'],['دعاء الصبر','رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَتَوَفَّنَا مُسْلِمِينَ','الأعراف: 126'],['دعاء الثبات','رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ','آل عمران: 8'],['دعاء الوالدين','رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا','الإسراء: 24']];
 $('duaCards').innerHTML=duas.map((d,i)=>'<article class="dua"><h3>'+safe(d[0])+'</h3><p>'+safe(d[1])+'</p><small>سورة '+safe(d[2])+'</small><div><button class="btn" data-dua="'+i+'">نسخ الدعاء</button></div></article>').join('');$('duaCards').onclick=async e=>{const b=e.target.closest('[data-dua]');if(!b)return;try{await navigator.clipboard.writeText(duas[+b.dataset.dua][1]);b.textContent='تم النسخ ✓';setTimeout(()=>b.textContent='نسخ الدعاء',1800)}catch(e){b.textContent='تعذر النسخ'}};
-const surahs='الفاتحة|البقرة|آل عمران|النساء|المائدة|الأنعام|الأعراف|الأنفال|التوبة|يونس|هود|يوسف|الرعد|إبراهيم|الحجر|النحل|الإسراء|الكهف|مريم|طه|الأنبياء|الحج|المؤمنون|النور|الفرقان|الشعراء|النمل|القصص|العنكبوت|الروم|لقمان|السجدة|الأحزاب|سبأ|فاطر|يس|الصافات|ص|الزمر|غافر|فصلت|الشورى|الزخرف|الدخان|الجاثية|الأحقاف|محمد|الفتح|الحجرات|ق|الذاريات|الطور|النجم|القمر|الرحمن|الواقعة|الحديد|المجادلة|الحشر|الممتحنة|الصف|الجمعة|المنافقون|التغابن|الطلاق|التحريم|الملك|القلم|الحاقة|المعارج|نوح|الجن|المزمل|المدثر|القيامة|الإنسان|المرسلات|النبأ|النازعات|عبس|التكوير|الانفطار|المطففين|الانشقاق|البروج|الطارق|الأعلى|الغاشية|الفجر|البلد|الشمس|الليل|الضحى|الشرح|التين|العلق|القدر|البينة|الزلزلة|العاديات|القارعة|التكاثر|العصر|الهمزة|الفيل|قريش|الماعون|الكوثر|الكافرون|النصر|المسد|الإخلاص|الفلق|الناس'.split('|');surahs.forEach((x,i)=>$('surah').add(new Option((i+1)+'. '+x,i+1)));let reciters=[],audioFallbackUsed=false;
+const surahs='الفاتحة|البقرة|آل عمران|النساء|المائدة|الأنعام|الأعراف|الأنفال|التوبة|يونس|هود|يوسف|الرعد|إبراهيم|الحجر|النحل|الإسراء|الكهف|مريم|طه|الأنبياء|الحج|المؤمنون|النور|الفرقان|الشعراء|النمل|القصص|العنكبوت|الروم|لقمان|السجدة|الأحزاب|سبأ|فاطر|يس|الصافات|ص|الزمر|غافر|فصلت|الشورى|الزخرف|الدخان|الجاثية|الأحقاف|محمد|الفتح|الحجرات|ق|الذاريات|الطور|النجم|القمر|الرحمن|الواقعة|الحديد|المجادلة|الحشر|الممتحنة|الصف|الجمعة|المنافقون|التغابن|الطلاق|التحريم|الملك|القلم|الحاقة|المعارج|نوح|الجن|المزمل|المدثر|القيامة|الإنسان|المرسلات|النبأ|النازعات|عبس|التكوير|الانفطار|المطففين|الانشقاق|البروج|الطارق|الأعلى|الغاشية|الفجر|البلد|الشمس|الليل|الضحى|الشرح|التين|العلق|القدر|البينة|الزلزلة|العاديات|القارعة|التكاثر|العصر|الهمزة|الفيل|قريش|الماعون|الكوثر|الكافرون|النصر|المسد|الإخلاص|الفلق|الناس'.split('|');surahs.forEach((x,i)=>$('surah').add(new Option((i+1)+'. '+x,i+1)));let reciters=[],audioFallbackUsed=false,alafasyBackupUrl='';
+const alafasyPrimary=n=>'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/'+n+'.mp3';
+const isAlafasy=r=>r&&/العفاسي|afasy|alafasy/i.test(r.name);
 function setAudio(){
  const n=Number($('surah').value),selected=$('reciter').value,r=reciters.find(x=>x.id===selected);
  let url='';
- audioFallbackUsed=false;
- if(r){
+ audioFallbackUsed=false;alafasyBackupUrl='';
+ if(isAlafasy(r)){
+  alafasyBackupUrl=r.surahs.has(n)?r.server.replace(/\\/+$/,'')+'/'+String(n).padStart(3,'0')+'.mp3':'';
+  url=alafasyPrimary(n);
+ }else if(r){
   if(!r.surahs.has(n)){
    $('audio').pause();$('audio').removeAttribute('src');$('audio').load();
    $('downloadAudio').removeAttribute('href');
    $('qstatus').textContent='هذه السورة غير متاحة لهذا القارئ في المصحف المحدد. اختر قارئًا آخر.';return;
   }
-  url=r.server.replace(/\\/?$/,'/')+String(n).padStart(3,'0')+'.mp3';
+  url=r.server.replace(/\\/+$/,'')+'/'+String(n).padStart(3,'0')+'.mp3';
  }else{
   url='https://cdn.islamic.network/quran/audio-surah/128/'+selected+'/'+n+'.mp3';
  }
@@ -54,16 +59,15 @@ function setAudio(){
 $('audio').addEventListener('error',()=>{
  const n=Number($('surah').value),selected=$('reciter').value;
  const r=reciters.find(x=>x.id===selected);
- if(r&&!audioFallbackUsed&&xFallbackFor(r)){
+ if(isAlafasy(r)&&!audioFallbackUsed&&alafasyBackupUrl){
   audioFallbackUsed=true;
-  const url='https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/'+n+'.mp3';
+  const url=alafasyBackupUrl;
   $('audio').src=url;$('downloadAudio').href=url;
   $('qstatus').textContent='تعذر المصدر الأول؛ جرّب تشغيل التلاوة من المصدر البديل.';
  }else{
   $('qstatus').textContent='تعذر تحميل التلاوة. تحقق من الاتصال بالإنترنت، أو اضغط «فتح التلاوة» أو اختر قارئًا آخر.';
  }
 });
-function xFallbackFor(r){return /العفاسي|afasy|alafasy/i.test(r.name)}
 $('audio').addEventListener('playing',()=>{$('qstatus').textContent='يتم الآن تشغيل سورة '+surahs[Number($('surah').value)-1]});
 $('surah').onchange=setAudio;$('reciter').onchange=setAudio;setAudio();
 fetch('https://mp3quran.net/api/v3/reciters?language=ar')
