@@ -86,8 +86,33 @@ fetch('https://mp3quran.net/api/v3/reciters?language=ar')
  $('reciterStatus').textContent='متاح '+reciters.length+' قارئًا من مكتبة MP3Quran';
  setAudio();
 }).catch(()=>{
- $('reciterStatus').textContent='تعذر تحميل مكتبة القراء الموسعة؛ يمكنك تجربة القراء الأساسيين.';
+ $('reciterStatus').textContent='تعذر الاتصال بمكتبة القرّاء الموسعة. القرّاء الأساسيون ما زالوا متاحين، ويمكن إعادة المحاولة بتحديث الصفحة.';
 });$('year').textContent=new Date().getFullYear();render();
+</script><script>
+/* Independent recovery for Quran player if the main site script stops before initialization. */
+(function(){
+ const get=id=>document.getElementById(id);
+ const status=get('reciterStatus'),surah=get('surah'),reciter=get('reciter'),audio=get('audio'),qstatus=get('qstatus'),download=get('downloadAudio');
+ if(!status||!surah||!reciter||!audio)return;
+ const backupNames='الفاتحة|البقرة|آل عمران|النساء|المائدة|الأنعام|الأعراف|الأنفال|التوبة|يونس|هود|يوسف|الرعد|إبراهيم|الحجر|النحل|الإسراء|الكهف|مريم|طه|الأنبياء|الحج|المؤمنون|النور|الفرقان|الشعراء|النمل|القصص|العنكبوت|الروم|لقمان|السجدة|الأحزاب|سبأ|فاطر|يس|الصافات|ص|الزمر|غافر|فصلت|الشورى|الزخرف|الدخان|الجاثية|الأحقاف|محمد|الفتح|الحجرات|ق|الذاريات|الطور|النجم|القمر|الرحمن|الواقعة|الحديد|المجادلة|الحشر|الممتحنة|الصف|الجمعة|المنافقون|التغابن|الطلاق|التحريم|الملك|القلم|الحاقة|المعارج|نوح|الجن|المزمل|المدثر|القيامة|الإنسان|المرسلات|النبأ|النازعات|عبس|التكوير|الانفطار|المطففين|الانشقاق|البروج|الطارق|الأعلى|الغاشية|الفجر|البلد|الشمس|الليل|الضحى|الشرح|التين|العلق|القدر|البينة|الزلزلة|العاديات|القارعة|التكاثر|العصر|الهمزة|الفيل|قريش|الماعون|الكوثر|الكافرون|النصر|المسد|الإخلاص|الفلق|الناس'.split('|');
+ setTimeout(function(){
+  if(surah.options.length&&status.textContent.indexOf('جارٍ')===-1)return;
+  if(!surah.options.length)backupNames.forEach((name,i)=>surah.add(new Option((i+1)+'. '+name,i+1)));
+  if(!reciter.options.length){
+   [['مشاري العفاسي','ar.alafasy'],['عبد الرحمن السديس','ar.abdurrahmaansudais'],['محمود خليل الحصري','ar.husary']].forEach(x=>reciter.add(new Option(x[0],x[1])));
+  }
+  const play=function(){
+   const n=Number(surah.value)||1,id=reciter.value;
+   const url='https://cdn.islamic.network/quran/audio-surah/128/'+id+'/'+n+'.mp3';
+   audio.src=url;download.href=url;
+   qstatus.textContent='سورة '+backupNames[n-1]+' — اضغط تشغيل للاستماع';
+  };
+  surah.addEventListener('change',play);reciter.addEventListener('change',play);
+  audio.addEventListener('error',function(){qstatus.textContent='تعذر تحميل الصوت من المصدر. افتح التلاوة مباشرة أو جرّب قارئًا آخر.'});
+  status.textContent='تعذر تشغيل مكتبة القرّاء الموسعة؛ تم تفعيل المشغّل الاحتياطي مؤقتًا.';
+  play();
+ },4500);
+})();
 </script><script>
 (function(){const key='bouh-alqalam-theme';const button=document.getElementById('themeToggle');let stored=null;try{stored=localStorage.getItem(key)}catch(e){}const prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;function apply(mode){document.documentElement.dataset.theme=mode;const dark=mode==='dark';button.setAttribute('aria-pressed',String(dark));button.setAttribute('aria-label',dark?'تفعيل الوضع النهاري':'تفعيل الوضع الليلي');button.innerHTML=dark?'☀️ <span>نهاري</span>':'🌙 <span>ليلي</span>'}apply(stored==='dark'||stored==='light'?stored:(prefers?'dark':'light'));button.addEventListener('click',function(){const next=document.documentElement.dataset.theme==='dark'?'light':'dark';apply(next);try{localStorage.setItem(key,next)}catch(e){}})})();
 </script><script id="publishedData" type="application/json">[]</script></body></html>
