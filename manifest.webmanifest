@@ -1,0 +1,21 @@
+{
+  "name": "بوح القلم — بشير قديش",
+  "short_name": "بوح القلم",
+  "description": "القرآن الكريم والأدعية والخواطر والكتابات — بقلم بشير قديش",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "/\-bouh-alqalam/",
+  "start_url": "/\-bouh-alqalam/",
+  "scope": "/\-bouh-alqalam/",
+  "display": "standalone",
+  "background_color": "#172b40",
+  "theme_color": "#172b40",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
