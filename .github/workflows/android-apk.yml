@@ -39,5 +39,15 @@ jobs:
           git add downloads/bouh-alqalam.apk
           if ! git diff --cached --quiet; then
             git commit -m "Publish latest Bouh Al Qalam APK for direct download"
-            git push origin HEAD:main
+            for attempt in 1 2 3 4 5; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "APK published successfully"
+                exit 0
+              fi
+              sleep 8
+            done
+            echo "Could not publish APK after retries"
+            exit 1
           fi
